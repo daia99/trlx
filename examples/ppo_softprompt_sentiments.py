@@ -14,7 +14,9 @@ from trlx.utils.loading import get_model, get_orchestrator, get_pipeline
 
 
 if __name__ == "__main__":
-    cfg = TRLConfig.load_yaml("configs/ppo_softprompt_config.yml")
+    cfg = TRLConfig.load_yaml(
+        "configs/ppo_softprompt_config.yml"
+    )  # load softprompt config instead of original ppo one
 
     sentiment_pipe = pipeline(
         "sentiment-analysis", "lvwerra/distilbert-imdb", device=-1
@@ -30,11 +32,11 @@ if __name__ == "__main__":
         scores = torch.tensor([output[1]["score"] for output in pipe_outputs])
         return scores
 
-    model: AcceleratePPOSoftpromptModel = get_model(cfg.model.model_type)(cfg)
-    
+    model = get_model(cfg.model.model_type)(cfg)
+
     if model.accelerator.is_main_process:
         wandb.watch(model.model)
-    
+
     pipeline: PPOPipeline = get_pipeline(cfg.train.pipeline)(model.tokenizer, cfg)
     orch: PPOOrchestrator = get_orchestrator(cfg.train.orchestrator)(
         model, pipeline, reward_fn=reward_fn, chunk_size=cfg.method.chunk_size

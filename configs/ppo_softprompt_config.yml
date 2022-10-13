@@ -4,8 +4,6 @@ model:
   model_type : "AcceleratePPOSoftpromptModel"  # Name of accelerate model type to load
   device : "cuda"  # Train device
   num_layers_unfrozen : -1  # Number of bottom layers to freeze during training
-  n_soft_tokens : 1  # Number of (prefix) soft prompt tokens
-  initialize_from_vocab : True  # Initialize learned soft prompt embeddings from vocab
 
 train:
   n_ctx : 512  # Size of LM context
@@ -34,7 +32,9 @@ train:
   accelerate_config_path : ""  # Path to accelerate config(for logging purposes)
 
 method:
-  name : 'ppoconfig'  # Name of RL method config
+  name : 'pposoftpromptconfig'  # Name of RL method config
+  n_soft_tokens : 1  # Number of (prefix) soft prompt tokens
+  initialize_from_vocab : True  # Initialize learned soft prompt embeddings from vocab
   num_rollouts : 128  # Number of rollouts to collect per epoch
   chunk_size : 128  # Number of rollouts to collect in one loop of orchestrator
   ppo_epochs : 4  # Number of ppo epochs

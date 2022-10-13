@@ -85,3 +85,10 @@ class ILQLConfig(MethodConfig):
     steps_for_target_q_sync: int
     beta: float
     two_qs: bool
+
+
+@dataclass
+@register_method
+class PPOSoftpromptConfig(PPOConfig):
+    n_soft_tokens: int = None  # soft prompt support
+    initialize_from_vocab: bool = True  # soft prompt support
